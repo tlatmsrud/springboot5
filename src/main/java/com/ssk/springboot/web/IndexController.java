@@ -1,12 +1,11 @@
 package com.ssk.springboot.web;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.ssk.springboot.config.auth.LoginUser;
 import com.ssk.springboot.config.auth.dto.SessionUser;
 import com.ssk.springboot.service.posts.PostsService;
 import com.ssk.springboot.web.dto.PostsResponseDto;
@@ -18,13 +17,11 @@ import lombok.RequiredArgsConstructor;
 public class IndexController {
 
 	private final PostsService postsService;
-	private final HttpSession httpSession;
 	
 	@GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("posts",postsService.findAllDesc());
-		SessionUser user = (SessionUser) httpSession.getAttribute("user");
+	public String index(Model model, @LoginUser SessionUser user) {
 		
+		model.addAttribute("posts",postsService.findAllDesc());
 		if(user != null) {
 			System.out.println(user.getName());
 			model.addAttribute("userName", user.getName());
